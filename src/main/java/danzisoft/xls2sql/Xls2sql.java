@@ -23,7 +23,7 @@ public class Xls2sql {
     public static void main(final String[] args) {
 
         final var options = new Options();
-        final var cliInput = new Option("i", "inputFile", true, "Xsl filepath");
+        final var cliInput = new Option("i", "inputFile", true, "Xls filepath");
         cliInput.setRequired(true);
         options.addOption(cliInput);
 
@@ -31,7 +31,7 @@ public class Xls2sql {
         cliQuery.setRequired(true);
         options.addOption(cliQuery);
 
-        final var cliTrim = new Option("t", "trim", false, "Trim values from xsl");
+        final var cliTrim = new Option("t", "trim", false, "Trim values from xls");
         options.addOption(cliTrim);
 
         final CommandLineParser cliParser = new DefaultParser();
