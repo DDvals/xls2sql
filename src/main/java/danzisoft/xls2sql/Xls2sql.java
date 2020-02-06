@@ -95,7 +95,9 @@ public class Xls2sql {
                 if (trim)
                     cellValue = cellValue.trim();
 
-                q = q.replaceAll("\\[\\$" + queryColumns[c] + "\\]", cellValue);
+                cellValue = cellValue.replaceAll("'", "''");    
+
+                q = q.replaceAll("\\[\\$" + queryColumns[c] + "\\]", "'" + cellValue + "'");
             }
 
             queries.add(q);
