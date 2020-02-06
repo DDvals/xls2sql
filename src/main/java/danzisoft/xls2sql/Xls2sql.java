@@ -1,4 +1,4 @@
-package danzisoft;
+package danzisoft.xls2sql;
 
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
