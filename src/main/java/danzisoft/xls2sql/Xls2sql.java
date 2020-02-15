@@ -3,6 +3,8 @@ package danzisoft.xls2sql;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -22,16 +24,16 @@ import org.apache.commons.cli.Option;
 public class Xls2sql {
     public static void main(final String[] args) {
 
-        final var options = new Options();
-        final var cliInput = new Option("i", "inputFile", true, "Xls filepath");
+        final Options options = new Options();
+        final Option cliInput = new Option("i", "inputFile", true, "Xls filepath");
         cliInput.setRequired(true);
         options.addOption(cliInput);
 
-        final var cliQuery = new Option("q", "query", true, "Query");
+        final Option cliQuery = new Option("q", "query", true, "Query");
         cliQuery.setRequired(true);
         options.addOption(cliQuery);
 
-        final var cliTrim = new Option("t", "trim", false, "Trim values from xls");
+        final Option cliTrim = new Option("t", "trim", false, "Trim values from xls");
         options.addOption(cliTrim);
 
         final CommandLineParser cliParser = new DefaultParser();
@@ -84,11 +86,11 @@ public class Xls2sql {
 
         for (int i = 0; i <= sheet.getLastRowNum(); i++) {
             String q = new String(query);
-            final var row = sheet.getRow(i);
+            final Row row = sheet.getRow(i);
 
             for (int c = 0; c < queryColumns.length; c++) {
-                final var cell = row.getCell(Integer.parseInt(queryColumns[c]));
-                var cellValue = cell.getStringCellValue();
+                final Cell cell = row.getCell(Integer.parseInt(queryColumns[c]));
+                String cellValue = cell.getStringCellValue();
                 if (cellValue == null)
                     cellValue = "";
 
