@@ -4,6 +4,7 @@ import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -47,16 +48,14 @@ public class Xls2sql {
         }
 
         boolean trim;
-        String query;
-        String xslPath;
 
         if (cmd.hasOption("t"))
             trim = true;
         else
             trim = false;
 
-        query = cmd.getOptionValue("q");
-        xslPath = cmd.getOptionValue("i");
+        String query = cmd.getOptionValue("q");
+        String xslPath = cmd.getOptionValue("i");
 
         System.out.println("Query: " + query);
 
@@ -90,16 +89,50 @@ public class Xls2sql {
 
             for (int c = 0; c < queryColumns.length; c++) {
                 final Cell cell = row.getCell(Integer.parseInt(queryColumns[c]));
-                String cellValue = cell.getStringCellValue();
-                if (cellValue == null)
-                    cellValue = "";
+                
+                boolean needQuote = false;
+                String cellValue = null;
+                
+                if(cell != null) {
+	                CellType type = cell.getCellType();
+	                
+	                switch(type) {
+	                case NUMERIC:
+	                	Double value = cell.getNumericCellValue();
+	                	
+	                	if(value.equals(Math.rint(value)))
+	                		cellValue = Integer.toString(value.intValue());
+	                	else
+	                		cellValue = Double.toString(cell.getNumericCellValue());
+	                	
+	                	break;
+	                case STRING:
+	                	cellValue = cell.getStringCellValue();
+	                	needQuote = true;
+	                	break;
+	                case BLANK:
+	                	cellValue = "null";
+	                	break;
+	                default:
+	                	System.err.println("Unsopported cell type: " + type.toString());
+	                    System.exit(-1);
+	                }
+                } else {
+                	cellValue = "null";
+                }
 
-                if (trim)
-                    cellValue = cellValue.trim();
+                if(needQuote) {
+	                if (trim)
+	                    cellValue = cellValue.trim();
+	
+	                cellValue = cellValue.replaceAll("'", "''");	                
+	                q = q.replaceAll("\\[\\$" + queryColumns[c] + "\\]", "'" + cellValue + "'");
+	                
+                } else {
+                	q = q.replaceAll("\\[\\$" + queryColumns[c] + "\\]", cellValue);
+                }
 
-                cellValue = cellValue.replaceAll("'", "''");    
-
-                q = q.replaceAll("\\[\\$" + queryColumns[c] + "\\]", "'" + cellValue + "'");
+                
             }
 
             queries.add(q);
