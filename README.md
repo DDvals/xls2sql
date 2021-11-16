@@ -30,8 +30,4 @@ Output: insert into mytable (col1, col2) values ('cAr1', 'cBr1');
 TODO
 ---
 * Output to file
-* Ignore header
-* Library version
 * More type support
-* Decent exceptions handling
-* Decent readme.md

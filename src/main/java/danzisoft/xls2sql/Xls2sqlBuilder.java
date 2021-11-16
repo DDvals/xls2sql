@@ -19,7 +19,11 @@ public class Xls2sqlBuilder {
 
         final List<String> queries = new ArrayList<>();
 
-        for (int i = 0; i <= sheet.getLastRowNum(); i++) {
+        int startIdx = 0;
+        if (skipHeader)
+            startIdx = 1;
+        
+        for (int i = startIdx; i <= sheet.getLastRowNum(); i++) {
             String q = new String(inputQuery);
             final Row row = sheet.getRow(i);
 

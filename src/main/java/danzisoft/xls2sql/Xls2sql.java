@@ -41,16 +41,18 @@ public class Xls2sql {
         final Option cliTrim = new Option("t", "trim", false, "Trim values from xls");
         options.addOption(cliTrim);
 
+        final Option ignoreHeader = new Option("ih", "ignoreheader", false, "Ignore header in the xls file");
+        options.addOption(ignoreHeader);
+
         return options;
     }
 
     private void run(CommandLine cmd) {
-        boolean trim;
 
-        trim = cmd.hasOption("t");
-
-        String query = cmd.getOptionValue("q");
-        String xslPath = cmd.getOptionValue("i");
+        final boolean trim = cmd.hasOption("t");
+        final boolean ignoreHeader = cmd.hasOption("ih");
+        final String query = cmd.getOptionValue("q");
+        final String xslPath = cmd.getOptionValue("i");
 
         System.out.println("Query: " + query);
 
@@ -60,7 +62,7 @@ public class Xls2sql {
         List<String> queries = null;
 
         try {
-            queries = builder.buildSql(query, workbook, 0, trim, false);
+            queries = builder.buildSql(query, workbook, 0, trim, ignoreHeader);
         } catch (Xls2sqlException e) {
             System.err.println(e.getMessage());
             System.exit(-1);
