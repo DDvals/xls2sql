@@ -54,7 +54,7 @@ public class Xls2sql {
         final String query = cmd.getOptionValue("q");
         final String xslPath = cmd.getOptionValue("i");
 
-        System.out.println("Query: " + query);
+        //System.out.println("Query: " + query);
 
         Workbook workbook = readWorkbook(xslPath);
        
