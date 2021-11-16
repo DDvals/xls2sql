@@ -1,44 +1,55 @@
 package danzisoft;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import danzisoft.xls2sql.Xls2sql;
 import org.apache.commons.cli.*;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.junit.Before;
 import org.junit.Test;
-
-
-/**
- * Unit test for simple App.
- */
 public class AppTest 
 {
-    /**
-     * Rigorous Test :-)
-     */
-    @Test
-    public void shouldAnswerWithTrue()
-    {
-        assertTrue( true );
+    String trimOpt;
+    String queryOpt;
+    String queryOptVal;
+    String inputOpt;
+    String inputOptVal;
+    String[] args;
+
+    Workbook workbook;
+
+    @Before
+    public void setup() {
+        trimOpt = "-t";
+        queryOpt = "-q";
+        queryOptVal = "select * from test where col1 = [$0] and col2 = [$1];";
+        inputOpt = "-i";
+        inputOptVal = "test.xlsx";
+        String[] localArgs = {trimOpt, queryOpt, queryOptVal, inputOpt, inputOptVal};
+        args = localArgs;
     }
+
+    public Workbook buildTestWorkbook() {
+        return null;
+    }
+
+    private CommandLine buildCommandLine() throws ParseException {
+        Options opt = Xls2sql.buildCliOptions();
+        final CommandLineParser cliParser = new DefaultParser();
+        final CommandLine cmd = cliParser.parse(opt, args);
+        return cmd;
+    }        
+
 
     @Test
     public void testCliOptions() throws ParseException {
-        Options opt = Xls2sql.buildCliOptions();
-        String trimOpt = "-t";
-        String queryOpt = "-q";
-        String queryOptVal = "select * from test where col1 = [$0] and col2 = [$1];";
-        String inputOpt = "-i";
-        String inputOptVal = "test.xlsx";
-        String[] args = {trimOpt, queryOpt, queryOptVal, inputOpt, inputOptVal};
-
-        final CommandLineParser cliParser = new DefaultParser();
-        CommandLine cmd = cliParser.parse(opt, args);
+        final CommandLine cmd = buildCommandLine();
 
         assertTrue(cmd.hasOption("t"));
         assertTrue(cmd.hasOption("q"));
         assertTrue(cmd.hasOption("i"));
-        assertTrue(queryOptVal.equals(cmd.getOptionValue("q")));
-        assertTrue(inputOptVal.equals(cmd.getOptionValue("i")));
+        assertEquals(queryOptVal, cmd.getOptionValue("q"));
+        assertEquals(inputOptVal, cmd.getOptionValue("i"));
     }
-    
 }

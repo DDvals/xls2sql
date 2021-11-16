@@ -24,41 +24,8 @@ public class Xls2sql {
             System.exit(-1);
         }
 
-        boolean trim;
-
-        trim = cmd.hasOption("t");
-
-        String query = cmd.getOptionValue("q");
-        String xslPath = cmd.getOptionValue("i");
-
-        System.out.println("Query: " + query);
-
-        FileInputStream file = null;
-        Workbook workbook = null;
-
-        try {
-            file = new FileInputStream(new File(xslPath));
-            workbook = new XSSFWorkbook(file);
-        } catch (final FileNotFoundException notFound) {
-            System.err.println("File not found " + notFound.getMessage());
-            System.exit(-1);
-        } catch (final IOException ioEx) {
-            System.err.println("Error reading input file " + ioEx.getMessage());
-            System.exit(-1);
-        }
-        
-        Xls2sqlBuilder builder = new Xls2sqlBuilder();
-        List<String> queries = null;
-
-        try {
-            queries = builder.buildSql(query, workbook, 0, trim, false);
-        } catch (Xls2sqlException e) {
-            System.err.println(e.getMessage());
-            System.exit(-1);
-        }
-
-        for (final String str : queries)
-            System.out.println(str);
+        Xls2sql xls2sql = new Xls2sql();
+        xls2sql.run(cmd);        
     }
 
     public static Options buildCliOptions() {
@@ -75,5 +42,49 @@ public class Xls2sql {
         options.addOption(cliTrim);
 
         return options;
+    }
+
+    private void run(CommandLine cmd) {
+        boolean trim;
+
+        trim = cmd.hasOption("t");
+
+        String query = cmd.getOptionValue("q");
+        String xslPath = cmd.getOptionValue("i");
+
+        System.out.println("Query: " + query);
+
+        Workbook workbook = readWorkbook(xslPath);
+       
+        Xls2sqlBuilder builder = new Xls2sqlBuilder();
+        List<String> queries = null;
+
+        try {
+            queries = builder.buildSql(query, workbook, 0, trim, false);
+        } catch (Xls2sqlException e) {
+            System.err.println(e.getMessage());
+            System.exit(-1);
+        }
+
+        for (final String str : queries)
+            System.out.println(str);
+    }
+
+    private Workbook readWorkbook(final String xlsPath) {
+        FileInputStream file = null;
+        Workbook workbook = null;
+
+        try {
+            file = new FileInputStream(new File(xlsPath));
+            workbook = new XSSFWorkbook(file);
+        } catch (final FileNotFoundException notFound) {
+            System.err.println("File not found " + notFound.getMessage());
+            System.exit(-1);
+        } catch (final IOException ioEx) {
+            System.err.println("Error reading input file " + ioEx.getMessage());
+            System.exit(-1);
+        }
+
+        return workbook;
     }
 }
