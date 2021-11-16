@@ -6,9 +6,13 @@ Read an xls(x) file and for each row build a query with the values in the row.
 Usage
 ---
 
-java Xls2sql [-t] -i _filepath_ -q _query_
+java Xls2sql [-t] [-ih] -i _filepath_ -q _query_
 
-Use -t (trim) option to trim the values.
+Options:
+    -t, trim: trim values found in every cell
+
+    -ih, ignoreheader: ignore the first row in the xls
+
 
 Query format
 ---
