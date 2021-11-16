@@ -9,6 +9,7 @@ Usage
 java Xls2sql [-t] [-ih] -i _filepath_ -q _query_
 
 Options:
+
     \-t, trim: trim values found in every cell
 
     \-ih, ignoreheader: ignore the first row in the xls
