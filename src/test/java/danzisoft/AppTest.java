@@ -1,13 +1,15 @@
 package danzisoft;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
 import danzisoft.xls2sql.Xls2sql;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import org.apache.commons.cli.*;
 import org.apache.poi.ss.usermodel.Workbook;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+
 public class AppTest 
 {
     String trimOpt;
@@ -19,7 +21,7 @@ public class AppTest
 
     Workbook workbook;
 
-    @Before
+    @BeforeAll
     public void setup() {
         trimOpt = "-t";
         queryOpt = "-q";
